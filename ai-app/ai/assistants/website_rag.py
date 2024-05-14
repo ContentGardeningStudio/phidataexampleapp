@@ -1,11 +1,15 @@
+from os import getenv
 from typing import Optional
 
 from phi.assistant import Assistant
 from phi.llm.openai import OpenAIChat
+from phi.llm.ollama import Ollama
 
 from ai.settings import ai_settings
 from ai.storage import website_assistant_storage
 from ai.knowledge_base import website_knowledge_base
+
+OLLAMA_HOST = getenv("OLLAMA_HOST")
 
 
 def get_rag_website_assistant(
@@ -19,8 +23,9 @@ def get_rag_website_assistant(
         name="rag_website_assistant",
         run_id=run_id,
         user_id=user_id,
-        llm=OpenAIChat(
-            model=ai_settings.gpt_4,
+        llm=Ollama(
+            model=ai_settings.llama3,
+            host=OLLAMA_HOST,
             max_tokens=ai_settings.default_max_tokens,
             temperature=ai_settings.default_temperature,
         ),

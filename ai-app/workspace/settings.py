@@ -36,7 +36,7 @@ ws_settings = WorkspaceSettings(
     # Name of the image
     image_name="ai-app",
     # Repository for the image
-    # image_repo="phidata",
+    image_repo="local",
     # Build images locally
-    # build_images=True,
+    build_images=True,
 )
