@@ -46,7 +46,7 @@ pip install -U "phidata[aws]"
 Add the following line to your `.env` file to allow the app to connect with Ollama in the same Docker network `ai` by default:
 
 ```shell
-python cookbook/llms/ollama/assistant.py
+OLLAMA_HOST="http://ollama:11434"
 ```
 
 ## 5. Build your development image
