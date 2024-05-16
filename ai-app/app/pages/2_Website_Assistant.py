@@ -19,7 +19,9 @@ st.set_page_config(
     page_icon=":orange_heart:",
 )
 st.title("Website Assistant")
-st.markdown("##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)")
+st.markdown(
+    "##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)"
+)
 
 
 def restart_assistant():
@@ -38,11 +40,13 @@ def main() -> None:
         st.sidebar.info(f":technologist: User: {username}")
     else:
         st.markdown("---")
-        st.markdown("#### :technologist: Enter a username, load a website and start chatting")
+        st.markdown(
+            "#### :technologist: Enter a username, load a website and start chatting"
+        )
         return
 
-    # Get assistant type
-    website_assistant_type = st.sidebar.selectbox("Assistant Type", options=["Autonomous", "RAG"])
+    # Set assistant type by default to RAG
+    website_assistant_type = "RAG"
     # Set assistant_type in session state
     if "website_assistant_type" not in st.session_state:
         st.session_state["website_assistant_type"] = website_assistant_type
@@ -53,7 +57,10 @@ def main() -> None:
 
     # Get the assistant
     website_assistant: Assistant
-    if "website_assistant" not in st.session_state or st.session_state["website_assistant"] is None:
+    if (
+        "website_assistant" not in st.session_state
+        or st.session_state["website_assistant"] is None
+    ):
         if st.session_state["website_assistant_type"] == "Autonomous":
             logger.info("---*--- Creating Autonomous Assistant ---*---")
             website_assistant = get_autonomous_website_assistant(
@@ -92,7 +99,9 @@ def main() -> None:
         st.session_state["messages"] = assistant_chat_history
     else:
         logger.debug("No chat history found")
-        st.session_state["messages"] = [{"role": "assistant", "content": "Ask me anything..."}]
+        st.session_state["messages"] = [
+            {"role": "assistant", "content": "Ask me anything..."}
+        ]
 
     # Prompt for user input
     if prompt := st.chat_input():
@@ -117,7 +126,9 @@ def main() -> None:
                     response += delta  # type: ignore
                     resp_container.markdown(response)
 
-            st.session_state["messages"].append({"role": "assistant", "content": response})
+            st.session_state["messages"].append(
+                {"role": "assistant", "content": response}
+            )
 
     if st.sidebar.button("New Run"):
         restart_assistant()
@@ -153,16 +164,22 @@ def main() -> None:
             loading_container.empty()
 
     if website_assistant.storage:
-        website_assistant_run_ids: List[str] = website_assistant.storage.get_all_run_ids(user_id=username)
-        new_website_assistant_run_id = st.sidebar.selectbox("Run ID", options=website_assistant_run_ids)
+        website_assistant_run_ids: List[str] = (
+            website_assistant.storage.get_all_run_ids(user_id=username)
+        )
+        new_website_assistant_run_id = st.sidebar.selectbox(
+            "Run ID", options=website_assistant_run_ids
+        )
         if st.session_state["website_assistant_run_id"] != new_website_assistant_run_id:
             logger.debug(f"Loading run {new_website_assistant_run_id}")
             if st.session_state["website_assistant_type"] == "Autonomous":
                 logger.info("---*--- Loading as Autonomous Assistant ---*---")
-                st.session_state["website_assistant"] = get_autonomous_website_assistant(
-                    user_id=username,
-                    run_id=new_website_assistant_run_id,
-                    debug_mode=True,
+                st.session_state["website_assistant"] = (
+                    get_autonomous_website_assistant(
+                        user_id=username,
+                        run_id=new_website_assistant_run_id,
+                        debug_mode=True,
+                    )
                 )
             else:
                 logger.info("---*--- Loading as RAG Assistant ---*---")

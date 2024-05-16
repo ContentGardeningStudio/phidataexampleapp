@@ -20,7 +20,9 @@ st.set_page_config(
     page_icon=":orange_heart:",
 )
 st.title("PDF Assistant")
-st.markdown("##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)")
+st.markdown(
+    "##### :orange_heart: built using [phidata](https://github.com/phidatahq/phidata)"
+)
 
 
 def restart_assistant():
@@ -40,11 +42,13 @@ def main() -> None:
         st.sidebar.info(f":technologist: User: {username}")
     else:
         st.markdown("---")
-        st.markdown("#### :technologist: Enter a username, upload a PDF and start chatting")
+        st.markdown(
+            "#### :technologist: Enter a username, upload a PDF and start chatting"
+        )
         return
 
-    # Get assistant type
-    pdf_assistant_type = st.sidebar.selectbox("Assistant Type", options=["Autonomous", "RAG"])
+    # Set assistant type by default to RAG
+    pdf_assistant_type = "RAG"
     # Set assistant_type in session state
     if "pdf_assistant_type" not in st.session_state:
         st.session_state["pdf_assistant_type"] = pdf_assistant_type
@@ -55,7 +59,10 @@ def main() -> None:
 
     # Get the assistant
     pdf_assistant: Assistant
-    if "pdf_assistant" not in st.session_state or st.session_state["pdf_assistant"] is None:
+    if (
+        "pdf_assistant" not in st.session_state
+        or st.session_state["pdf_assistant"] is None
+    ):
         if st.session_state["pdf_assistant_type"] == "Autonomous":
             logger.info("---*--- Creating Autonomous Assistant ---*---")
             pdf_assistant = get_autonomous_pdf_assistant(
@@ -95,7 +102,9 @@ def main() -> None:
         st.session_state["messages"] = assistant_chat_history
     else:
         logger.debug("No chat history found")
-        st.session_state["messages"] = [{"role": "assistant", "content": "Ask me anything..."}]
+        st.session_state["messages"] = [
+            {"role": "assistant", "content": "Ask me anything..."}
+        ]
 
     # Prompt for user input
     if prompt := st.chat_input():
@@ -120,7 +129,9 @@ def main() -> None:
                     response += delta  # type: ignore
                     resp_container.markdown(response)
 
-            st.session_state["messages"].append({"role": "assistant", "content": response})
+            st.session_state["messages"].append(
+                {"role": "assistant", "content": response}
+            )
 
     if st.sidebar.button("New Run"):
         restart_assistant()
@@ -168,8 +179,12 @@ def main() -> None:
             alert.empty()
 
     if pdf_assistant.storage:
-        pdf_assistant_run_ids: List[str] = pdf_assistant.storage.get_all_run_ids(user_id=username)
-        new_pdf_assistant_run_id = st.sidebar.selectbox("Run ID", options=pdf_assistant_run_ids)
+        pdf_assistant_run_ids: List[str] = pdf_assistant.storage.get_all_run_ids(
+            user_id=username
+        )
+        new_pdf_assistant_run_id = st.sidebar.selectbox(
+            "Run ID", options=pdf_assistant_run_ids
+        )
         if st.session_state["pdf_assistant_run_id"] != new_pdf_assistant_run_id:
             logger.debug(f"Loading run {new_pdf_assistant_run_id}")
             if st.session_state["pdf_assistant_type"] == "Autonomous":

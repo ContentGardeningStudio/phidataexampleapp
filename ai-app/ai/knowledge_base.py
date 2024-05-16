@@ -38,7 +38,7 @@ pdf_knowledge_base = CombinedKnowledgeBase(
         db_url=db_url,
         # Store the embeddings in ai.pdf_documents
         collection="pdf_documents",
-        embedder=embedder,
+        embedder=OllamaEmbedder(model=ai_settings.nomic_embed_text, dimensions=768),
     ),
     # 2 references are added to the prompt
     num_documents=2,
@@ -48,7 +48,8 @@ website_knowledge_base = WebsiteKnowledgeBase(
     # Add URLs to the knowledge base
     # urls=["https://docs.phidata.com/introduction"],
     # Number of links to follow from the seed URLs
-    max_links=15,
+    max_depth=2,
+    max_links=5,
     vector_db=PgVector2(
         db_url=db_url,
         # Store the embeddings in ai.website_documents
