@@ -34,7 +34,7 @@ def restart_assistant():
 
 def main() -> None:
     # Get OpenAI key from environment variable or user input
-    get_openai_key_sidebar()
+    # get_openai_key_sidebar()
 
     # Get username
     username = get_username_sidebar()
