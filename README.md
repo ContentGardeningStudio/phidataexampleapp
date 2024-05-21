@@ -2,54 +2,60 @@
 
 This is an example AI app with assistants based on phidata. This AI app is built with Streamlit, PgVector, and local LLMs using ollama. You can run it locally using Docker.
 
-## 1. [Install](https://hub.docker.com/r/ollama/ollama) ollama wit docker and run models
+## Setup Workspace
 
-### Run Ollama locally on docker
+1. Clone the git repo
 
-Set up the same network as the app network `ai` by default:
+> from the `ai-app` dir:
 
-```shell
-docker run -d -v ollama:/root/.ollama --name ollama --network ai ollama/ollama
-```
-
-### Run chat and embedding models
-
-```shell
-# run llama3
-docker exec -it ollama ollama run llama3
-
-# run nomic-embed-text
-docker exec -it ollama ollama run nomic-embed-text
-```
-
-Message `/bye` to exit the chat model
-
-## 2. Create a virtual environment
-
-Open the Terminal and create a python virtual environment.
+2. Create + activate a virtual env:
 
 ```shell
 python3 -m venv venv
 source ./venv/bin/activate
 ```
 
-## 3. Install phidata
+3. Install dependencies:
 
-Install phidata using pip
-
-```shell
-pip install -U "phidata[aws]"
+```sh
+./scripts/install.sh
 ```
 
-## 4. Set environment variables
+4. Setup workspace:
 
-Add the following line to your `.env` file to allow the app to connect with Ollama in the same Docker network `ai` by default:
-
-```shell
-OLLAMA_HOST="http://ollama:11434"
+```sh
+phi ws setup
 ```
 
-## 5. Build your development image
+5. upgraded `phidata`:
+
+```sh
+pip install -U phidata
+```
+
+## Run AI App locally
+
+1. Start the workspace using:
+
+```sh
+phi ws up
+```
+
+2. Pull the llama3 and nomic-embed-text models (run this command only once during the initial workspace setup):
+
+```sh
+scripts/pull_ollama_models.sh
+```
+
+- Open [localhost:8501](http://localhost:8501) to view the Streamlit App.
+
+3. Stop the workspace using:
+
+```sh
+phi ws down
+```
+
+## Build your development image
 
 Build the development image using:
 
@@ -63,12 +69,10 @@ To force rebuild images, use the --force or -f flag
 phi ws up --env dev --infra docker --type image --force
 ```
 
-## 6. Restart all containers
+## Restart all containers
 
 Restart all docker containers using:
 
 ```shell
 phi ws restart --env dev --infra docker --type container
 ```
-
-Open localhost:8501 to view your AI Apps.
